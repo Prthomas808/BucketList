@@ -9,11 +9,19 @@ import Foundation
 
 class BucketListViewModel: ObservableObject {
   
-  var goals: [bucketListGoal] = []
-  var addToBucketListViewPresented = false
+  @Published var goals: [bucketListGoal] = []
+  @Published var addToBucketListViewPresented = false
   
   func addToBucketList(goal: String) {
     goals.append(bucketListGoal(goalYouWant: goal))
+  }
+  
+  func deleteItem(index: IndexSet) {
+    goals.remove(atOffsets: index)
+  }
+  
+  func moveitem(indices: IndexSet, newOffset: Int) {
+    goals.move(fromOffsets: indices, toOffset: newOffset)
   }
   
 }

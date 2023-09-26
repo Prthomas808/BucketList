@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct AddToBucketListView: View {
+  
   @State private var goal = ""
-  @Environment(\.dismiss) var dismiss
+  @ObservedObject var bucketList: BucketListViewModel
   
   var body: some View {
     NavigationStack {
@@ -21,7 +22,8 @@ struct AddToBucketListView: View {
           }
         
         Button {
-          //
+          bucketList.addToBucketList(goal: goal)
+          bucketList.addToBucketListViewPresented = false
         } label: {
           RoundedBarView(barColor: .red)
             .overlay {
@@ -36,7 +38,7 @@ struct AddToBucketListView: View {
       .navigationTitle("Bucket List 🥅")
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
-          Button("Cancel") { dismiss() }
+          Button("Cancel") { bucketList.addToBucketListViewPresented.toggle() }
             .tint(.red)
         }
       }
@@ -47,7 +49,7 @@ struct AddToBucketListView: View {
 
 struct AddToBucketListView_Previews: PreviewProvider {
   static var previews: some View {
-    AddToBucketListView()
+    AddToBucketListView(bucketList: BucketListViewModel())
   }
 }
 

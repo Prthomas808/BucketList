@@ -9,25 +9,31 @@ import SwiftUI
 
 struct BucketListMainView: View {
   
-  @State private var AddToBucketListPresented = false
+  @ObservedObject var bucketList: BucketListViewModel = BucketListViewModel()
   
   var body: some View {
     NavigationStack {
       VStack {
         List {
-          ForEach(1..<5, id: \.self) { item in
-            Text("Bucket List Item \(item)")
+          ForEach(bucketList.goals) { goal in
+            Text("\(goal.goalYouWant)")
           }
+          .onDelete(perform: bucketList.deleteItem)
+          .onMove(perform: bucketList.moveitem)
         }
         .listStyle(.plain)
         .navigationTitle("Bucket List 🪣")
         .toolbar {
           ToolbarItem(placement: .navigationBarTrailing) {
-            Button("Add") { AddToBucketListPresented.toggle() }
+            Button("Add") { bucketList.addToBucketListViewPresented.toggle() }
+          }
+          
+          ToolbarItem(placement: .navigationBarLeading) {
+            EditButton()
           }
         }
-        .sheet(isPresented: $AddToBucketListPresented) {
-          AddToBucketListView()
+        .sheet(isPresented: $bucketList.addToBucketListViewPresented) {
+          AddToBucketListView(bucketList: bucketList)
         }
       }
     }
