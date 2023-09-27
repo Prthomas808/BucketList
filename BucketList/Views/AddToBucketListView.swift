@@ -10,6 +10,7 @@ import SwiftUI
 struct AddToBucketListView: View {
   
   @State private var goal = ""
+  @State private var showAlert = false
   @ObservedObject var bucketList: BucketListViewModel
   
   var body: some View {
@@ -19,17 +20,25 @@ struct AddToBucketListView: View {
           .overlay {
             TextField("What Do You Want To Do?", text: $goal)
               .padding()
+              .foregroundColor(.red)
           }
         
         Button {
-          bucketList.addToBucketList(goal: goal)
-          bucketList.addToBucketListViewPresented = false
+          if goal.isEmpty {
+            showAlert.toggle()
+          } else {
+            bucketList.addToBucketList(goal: goal)
+            bucketList.addToBucketListViewPresented = false
+          }
         } label: {
           RoundedBarView(barColor: .red)
             .overlay {
               Text("Add To Bucket list")
                 .foregroundColor(.white)
                 .bold()
+            }
+            .alert("Please add a goal", isPresented: $showAlert) {
+              Button("Ok", role: .cancel) {}
             }
         }
         
